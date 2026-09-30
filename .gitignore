@@ -1,0 +1,29 @@
+# 資料檔（依規格不得提交，請依 README 自行下載）
+data/*.csv
+
+# 訓練／分析產物一律不提交（含 split_indices.npz、cost_summary.csv、
+# 預測 npz、圖表 png 等），由腳本重新產生即可；只保留空資料夾結構。
+outputs/*
+!outputs/models
+!outputs/predictions
+!outputs/figures
+outputs/models/*
+outputs/predictions/*
+outputs/figures/*
+!outputs/models/.gitkeep
+!outputs/predictions/.gitkeep
+!outputs/figures/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 作業系統／編輯器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

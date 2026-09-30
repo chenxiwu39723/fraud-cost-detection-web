@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成本導向盜刷偵測</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>成本導向的信用卡盜刷偵測</h1>
+    <p class="subtitle">以「銀行期望損失最小化」決定判定門檻，而非準確率</p>
+    <p class="demo-banner" id="demoBanner">⚠️ 目前為展示版：預測機率為合成假資料，非真實模型輸出</p>
+  </header>
+
+  <main>
+    <!-- 左側控制區 -->
+    <section class="controls">
+      <h2>參數設定</h2>
+
+      <label for="model">模型</label>
+      <select id="model">
+        {% for key, name in models.items() %}
+        <option value="{{ key }}">{{ name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="cfp">誤判行政成本 C_FP：<span id="cfpValue">10</span></label>
+      <input type="range" id="cfp" min="1" max="200" step="1" value="10">
+      <p class="hint">漏判成本 = 該筆盜刷金額；誤判成本 = 固定 C_FP</p>
+
+      <button id="sampleBtn">單筆交易試算</button>
+      <div id="sampleResult" class="sample-result" hidden></div>
+    </section>
+
+    <!-- 右側結果區 -->
+    <section class="results">
+      <div class="cards">
+        <div class="card">
+          <div class="card-label">最佳門檻 t*</div>
+          <div class="card-value" id="cardThreshold">—</div>
+          <div class="card-note">於 validation set 選出</div>
+        </div>
+        <div class="card">
+          <div class="card-label">test set 總損失</div>
+          <div class="card-value" id="cardCost">—</div>
+          <div class="card-note">以 t* 判定</div>
+        </div>
+        <div class="card highlight">
+          <div class="card-label">相較 t=0.5 節省</div>
+          <div class="card-value" id="cardSavings">—</div>
+          <div class="card-note">正值代表省下的損失</div>
+        </div>
+      </div>
+
+      <div class="chart-block">
+        <h3>總損失 vs 門檻（test set）</h3>
+        <canvas id="costChart"></canvas>
+      </div>
+
+      <div class="chart-block">
+        <h3>ROC 曲線（標出 t* 操作點）</h3>
+        <canvas id="rocChart"></canvas>
+      </div>
+
+      <div class="chart-block">
+        <h3>混淆矩陣（t* 下）</h3>
+        <table class="confusion" id="confusion">
+          <thead>
+            <tr><th></th><th>預測正常</th><th>預測盜刷</th></tr>
+          </thead>
+          <tbody>
+            <tr><th>實際正常</th><td id="cmTN">—</td><td id="cmFP">—</td></tr>
+            <tr><th>實際盜刷</th><td id="cmFN">—</td><td id="cmTP">—</td></tr>
+          </tbody>
+        </table>
+        <p class="hint" id="baseline">—</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>限制：特徵經 PCA 匿名化無法解釋；C_FP 為假設值；資料僅涵蓋兩天歐洲交易。</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

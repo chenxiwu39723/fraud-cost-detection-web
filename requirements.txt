@@ -1,0 +1,9 @@
+# Python 3.11（開發環境實測 3.12 亦可執行）
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+xgboost>=2.0
+matplotlib>=3.8
+joblib>=1.4
+flask>=3.0
+gunicorn>=21.2
