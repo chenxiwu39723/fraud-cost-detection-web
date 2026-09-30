@@ -2,7 +2,7 @@
 pandas>=2.2
 numpy>=1.26
 scikit-learn>=1.5
-xgboost>=2.0
+xgboost>=2.0,<3      # 註：3.x 的 Windows wheel 在本開發環境 fit 時會 segfault，故鎖定 2.x
 matplotlib>=3.8
 joblib>=1.4
 flask>=3.0
